@@ -26,6 +26,10 @@ function init() {
             update();
         });
     }
+    let otherCheckBox = document.getElementById("discarded");
+    otherCheckBox.addEventListener('change', function () {
+        update();
+    });
 }
 
 function update() {
@@ -55,6 +59,9 @@ function isIncluded(contract) {
         if (!checkBox.checked && (contract.rewards[reward] > 0)) {
             included = false;
         }
+    }
+    if (!(document.getElementById("discarded") as HTMLInputElement).checked && contract.discarded) {
+        included = false;
     }
     return included;
 }
