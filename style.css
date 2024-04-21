@@ -1,0 +1,32 @@
+.filters {
+    font-size: x-large;
+
+    input {
+        width: 20px;
+        height: 20px;
+    }
+}
+
+.contract {
+    margin: 5px;
+    float: left;
+
+    color: red;
+    font-size: 14em;
+    line-height: 194px;
+    text-align: center;
+    user-select: none;
+
+
+    width: 194px;
+    height: 194px;
+    background-image: url('contracts.webp');
+    background-size: 9894px 194px;
+}
+
+html {
+    color: #222;
+    font-size: 1em;
+    line-height: 1.4;
+    background-color: palegoldenrod;
+}
