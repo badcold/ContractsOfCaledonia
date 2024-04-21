@@ -2,7 +2,7 @@ let contracts;
 
 let costs = ["sheep", "cow", "wool", "bread", "cheese", "whisky"]
 let rewards = ["cotton", "tobacco", "sugarCane", "upgrade", "expansion", "gold", "hops"]
-let exports = ["cotton", "tobacco", "sugarCane"]
+let imports = ["cotton", "tobacco", "sugarCane"]
 let bonuses = ["upgrade", "expansion", "gold", "hops"]
 
 function init() {
@@ -43,11 +43,11 @@ function buildHeader() {
             <span>Costs:</span>
             ${buildCheckBoxes(costs)}
         </div>
-        <div id="exports" class="filters">
-            <button type="button" id="rewardsNone" onclick="setAllExportsCheckboxes(false)">None</button>
-            <button type="button" id="rewardsAll" onclick="setAllExportsCheckboxes(true)">All</button>
-            <span>Exports:</span>
-            ${buildCheckBoxes(exports)}
+        <div id="imports" class="filters">
+            <button type="button" id="rewardsNone" onclick="setAllImportsCheckboxes(false)">None</button>
+            <button type="button" id="rewardsAll" onclick="setAllImportsCheckboxes(true)">All</button>
+            <span>Imports:</span>
+            ${buildCheckBoxes(imports)}
         </div>
         <div id="bonuses" class="filters">
             <button type="button" id="bonusesNone" onclick="setAllBonusesCheckboxes(false)">None</button>
@@ -71,8 +71,8 @@ function setAllCostsCheckboxes(value: boolean) {
     update();
 }
 
-function setAllExportsCheckboxes(value: boolean) {
-    for (const filter of exports) {
+function setAllImportsCheckboxes(value: boolean) {
+    for (const filter of imports) {
         let checkBox = document.getElementById(filter) as HTMLInputElement;
         checkBox.checked = value;
     }
@@ -97,9 +97,9 @@ function buildCheckBoxes(filters: string[]): string {
 
 function buildCheckBox(filterKey: string): string {
     let capitalized = filterKey[0].toUpperCase() + filterKey.slice(1);
-    return `<input id="${filterKey}" type="checkbox" checked="checked"/>
+    return `<span class="filterElement"><input id="${filterKey}" type="checkbox" checked="checked"/>
         <label for="${filterKey}">${capitalized}</label>
-        <span id="${filterKey}Count"></span>`;
+        <span id="${filterKey}Count"></span></span>`;
 }
 
 

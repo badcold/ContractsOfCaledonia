@@ -7,6 +7,10 @@
     }
 }
 
+.filterElement {
+	margin: 15px;
+}
+
 .contract {
     margin: 5px;
     float: left;
