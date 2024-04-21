@@ -4,6 +4,7 @@ let costs = ["sheep", "cow", "wool", "bread", "cheese", "whisky"]
 let rewards = ["cotton", "tobacco", "sugarCane", "upgrade", "expansion", "gold", "hops"]
 
 function init() {
+    buildHeader();
     fetch('contracts.json')
         .then(response => response.json())
         .then(json => {
@@ -30,6 +31,37 @@ function init() {
     otherCheckBox.addEventListener('change', function () {
         update();
     });
+}
+
+function buildHeader() {
+    document.getElementById("header").innerHTML = `
+        <div id="costs" class="filters">
+            <span>Costs:</span>
+            ${buildCheckBoxes(costs)}
+        </div>
+        <div id="rewards" class="filters">
+            <span>Rewards:</span>
+            ${buildCheckBoxes(rewards)}
+        </div>
+
+        <div id="other" class="filters">
+            <span>Other:</span>
+            ${buildCheckBoxes(["discarded"])}
+        </div>
+    `;
+}
+
+function buildCheckBoxes(filters: string[]) : string {
+    let result = "";
+    for (const filter of filters) {
+        result += buildCheckBox(filter);
+    }
+    return result;
+}
+
+function buildCheckBox(filterKey: string): string {
+    let capitalized = filterKey[0].toUpperCase() + filterKey.slice(1);
+    return `<input id="${filterKey}" type="checkbox" checked="checked"/><label for="${filterKey}">${capitalized}</label>`;
 }
 
 function update() {
