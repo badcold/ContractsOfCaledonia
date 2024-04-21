@@ -51,7 +51,7 @@ function buildHeader() {
     `;
 }
 
-function buildCheckBoxes(filters: string[]) : string {
+function buildCheckBoxes(filters: string[]): string {
     let result = "";
     for (const filter of filters) {
         result += buildCheckBox(filter);
@@ -61,22 +61,79 @@ function buildCheckBoxes(filters: string[]) : string {
 
 function buildCheckBox(filterKey: string): string {
     let capitalized = filterKey[0].toUpperCase() + filterKey.slice(1);
-    return `<input id="${filterKey}" type="checkbox" checked="checked"/><label for="${filterKey}">${capitalized}</label>`;
+    return `<input id="${filterKey}" type="checkbox" checked="checked"/>
+        <label for="${filterKey}">${capitalized}</label>
+        <span id="${filterKey}Count"></span>`;
 }
 
+
 function update() {
-    let includedContracts = "";
-    let excludedContracts = "";
+    let includedContracts = [];
+    let excludedContracts = [];
     for (const contract of contracts) {
         if (isIncluded(contract)) {
-            includedContracts += generateContractHtml(contract);
+            includedContracts.push(contract);
         } else {
-            excludedContracts += generateContractHtml(contract);
+            excludedContracts.push(contract);
         }
     }
-    document.getElementById("included").innerHTML = includedContracts;
-    document.getElementById("excluded").innerHTML = excludedContracts;
+
+    for (const filter of costs) {
+        let checkBox = document.getElementById(filter) as HTMLInputElement;
+        if (checkBox.checked) {
+            setFilterCounts(includedContracts, "costs", filter);
+        } else {
+            setFilterCounts(excludedContracts, "costs", filter);
+        }
+    }
+
+    for (const filter of rewards) {
+        let checkBox = document.getElementById(filter) as HTMLInputElement;
+        if (checkBox.checked) {
+            setFilterCounts(includedContracts, "rewards", filter);
+        } else {
+            setFilterCounts(excludedContracts, "rewards", filter);
+        }
+    }
+
+    setDirectFilterCounts(contracts, "discarded");
+
+    let includedContractsHtml = "";
+    for (const included of includedContracts) {
+        includedContractsHtml += generateContractHtml(included);
+    }
+    document.getElementById("included").innerHTML = includedContractsHtml;
+
+    let excludedContractsHtml = "";
+    for (const excluded of excludedContracts) {
+        excludedContractsHtml += generateContractHtml(excluded);
+    }
+    document.getElementById("excluded").innerHTML = excludedContractsHtml;
 }
+
+function setFilterCounts(contracts: any[], subcategory:string, filterKey: string) {
+    let count: number = 0;
+    let sum: number = 0;
+    for (const contract of contracts) {
+        let value = contract[subcategory][filterKey];
+        sum += value
+        if (value > 0) {
+            count += 1
+        }
+    }
+    document.getElementById(filterKey+"Count").innerHTML = `(${sum} on ${count})`;
+}
+
+function setDirectFilterCounts(contracts, filter: string) {
+    let count: number = 0;
+    for (const contract of contracts) {
+        if (contract[filter]) {
+            count += 1;
+        }
+    }
+    document.getElementById("discardedCount").innerHTML = `(${count})`;
+}
+
 
 function isIncluded(contract) {
     let included = true;
