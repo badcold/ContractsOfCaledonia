@@ -2,6 +2,8 @@ let contracts;
 
 let costs = ["sheep", "cow", "wool", "bread", "cheese", "whisky"]
 let rewards = ["cotton", "tobacco", "sugarCane", "upgrade", "expansion", "gold", "hops"]
+let exports = ["cotton", "tobacco", "sugarCane"]
+let bonuses = ["upgrade", "expansion", "gold", "hops"]
 
 function init() {
     buildHeader();
@@ -36,12 +38,22 @@ function init() {
 function buildHeader() {
     document.getElementById("header").innerHTML = `
         <div id="costs" class="filters">
+            <button type="button" id="costsNone" onclick="setAllCostsCheckboxes(false)">None</button>
+            <button type="button" id="costsAll" onclick="setAllCostsCheckboxes(true)">All</button>
             <span>Costs:</span>
             ${buildCheckBoxes(costs)}
         </div>
-        <div id="rewards" class="filters">
-            <span>Rewards:</span>
-            ${buildCheckBoxes(rewards)}
+        <div id="exports" class="filters">
+            <button type="button" id="rewardsNone" onclick="setAllExportsCheckboxes(false)">None</button>
+            <button type="button" id="rewardsAll" onclick="setAllExportsCheckboxes(true)">All</button>
+            <span>Exports:</span>
+            ${buildCheckBoxes(exports)}
+        </div>
+        <div id="bonuses" class="filters">
+            <button type="button" id="bonusesNone" onclick="setAllBonusesCheckboxes(false)">None</button>
+            <button type="button" id="bonusesAll" onclick="setAllBonusesCheckboxes(true)">All</button>
+            <span>Bonus:</span>
+            ${buildCheckBoxes(bonuses)}
         </div>
 
         <div id="other" class="filters">
@@ -49,6 +61,30 @@ function buildHeader() {
             ${buildCheckBoxes(["discarded"])}
         </div>
     `;
+}
+
+function setAllCostsCheckboxes(value: boolean) {
+    for (const filter of costs) {
+        let checkBox = document.getElementById(filter) as HTMLInputElement;
+        checkBox.checked = value;
+    }
+    update();
+}
+
+function setAllExportsCheckboxes(value: boolean) {
+    for (const filter of exports) {
+        let checkBox = document.getElementById(filter) as HTMLInputElement;
+        checkBox.checked = value;
+    }
+    update();
+}
+
+function setAllBonusesCheckboxes(value: boolean) {
+    for (const filter of bonuses) {
+        let checkBox = document.getElementById(filter) as HTMLInputElement;
+        checkBox.checked = value;
+    }
+    update();
 }
 
 function buildCheckBoxes(filters: string[]): string {
