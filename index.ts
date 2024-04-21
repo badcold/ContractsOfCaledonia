@@ -107,7 +107,7 @@ function update() {
     let includedContracts = [];
     let excludedContracts = [];
     for (const contract of contracts) {
-        if (isIncluded(contract)) {
+        if (isIncluded(contract, "")) {
             includedContracts.push(contract);
         } else {
             excludedContracts.push(contract);
@@ -117,18 +117,18 @@ function update() {
     for (const filter of costs) {
         let checkBox = document.getElementById(filter) as HTMLInputElement;
         if (checkBox.checked) {
-            setFilterCounts(includedContracts, "costs", filter);
+            setIncludedFilterCounts(includedContracts, "costs", filter);
         } else {
-            setFilterCounts(excludedContracts, "costs", filter);
+            setExcludedFilterCounts(excludedContracts, "costs", filter);
         }
     }
 
     for (const filter of rewards) {
         let checkBox = document.getElementById(filter) as HTMLInputElement;
         if (checkBox.checked) {
-            setFilterCounts(includedContracts, "rewards", filter);
+            setIncludedFilterCounts(includedContracts, "rewards", filter);
         } else {
-            setFilterCounts(excludedContracts, "rewards", filter);
+            setExcludedFilterCounts(excludedContracts, "rewards", filter);
         }
     }
 
@@ -147,7 +147,7 @@ function update() {
     document.getElementById("excluded").innerHTML = excludedContractsHtml;
 }
 
-function setFilterCounts(contracts: any[], subcategory:string, filterKey: string) {
+function setIncludedFilterCounts(contracts: any[], subcategory: string, filterKey: string) {
     let count: number = 0;
     let sum: number = 0;
     for (const contract of contracts) {
@@ -157,7 +157,22 @@ function setFilterCounts(contracts: any[], subcategory:string, filterKey: string
             count += 1
         }
     }
-    document.getElementById(filterKey+"Count").innerHTML = `(${sum} on ${count})`;
+    document.getElementById(filterKey + "Count").innerHTML = `(${sum} on ${count})`;
+}
+
+function setExcludedFilterCounts(contracts: any[], subcategory: string, filterKey: string) {
+    let count: number = 0;
+    let sum: number = 0;
+    for (const contract of contracts) {
+        if (isIncluded(contract, filterKey)) {
+            let value = contract[subcategory][filterKey];
+            sum += value
+            if (value > 0) {
+                count += 1
+            }
+        }
+    }
+    document.getElementById(filterKey + "Count").innerHTML = `(+${sum} on ${count})`;
 }
 
 function setDirectFilterCounts(contracts, filter: string) {
@@ -171,21 +186,29 @@ function setDirectFilterCounts(contracts, filter: string) {
 }
 
 
-function isIncluded(contract) {
+function isIncluded(contract, ignoredCriteria: string) {
     let included = true;
     for (const cost of costs) {
+        if (cost == ignoredCriteria) {
+            continue;
+        }
         let checkBox = document.getElementById(cost) as HTMLInputElement;
         if (!checkBox.checked && (contract.costs[cost] > 0)) {
             included = false;
         }
     }
     for (const reward of rewards) {
+        if (reward == ignoredCriteria) {
+            continue;
+        }
         let checkBox = document.getElementById(reward) as HTMLInputElement;
         if (!checkBox.checked && (contract.rewards[reward] > 0)) {
             included = false;
         }
     }
-    if (!(document.getElementById("discarded") as HTMLInputElement).checked && contract.discarded) {
+    if ("discarded" != ignoredCriteria
+        && !(document.getElementById("discarded") as HTMLInputElement).checked
+        && contract.discarded) {
         included = false;
     }
     return included;
