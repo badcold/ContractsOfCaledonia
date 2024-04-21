@@ -224,7 +224,7 @@
               "tobacco": 0,
               "upgrade": 0}},
  {"costs": {"bread": 0,
-            "cheese": 0,
+            "cheese": 2,
             "cow": 2,
             "sheep": 0,
             "whisky": 0,
