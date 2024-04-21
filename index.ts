@@ -8,20 +8,20 @@ function init() {
         .then(response => response.json())
         .then(json => {
             contracts = json;
-            for (contract of contracts) {
+            for (const contract of contracts) {
                 contract.discarded = false;
             }
             update();
         })
         .catch(error => console.error('Error:', error));
-    for (cost of costs) {
-        checkBox = document.getElementById(cost);
+    for (const cost of costs) {
+        let checkBox = document.getElementById(cost);
         checkBox.addEventListener('change', function () {
             update();
         });
     }
-    for (reward of rewards) {
-        checkBox = document.getElementById(reward);
+    for (const reward of rewards) {
+        let checkBox = document.getElementById(reward);
         checkBox.addEventListener('change', function () {
             update();
         });
@@ -31,7 +31,7 @@ function init() {
 function update() {
     let includedContracts = "";
     let excludedContracts = "";
-    for (contract of contracts) {
+    for (const contract of contracts) {
         if (isIncluded(contract)) {
             includedContracts += generateContractHtml(contract);
         } else {
@@ -44,14 +44,14 @@ function update() {
 
 function isIncluded(contract) {
     let included = true;
-    for (cost of costs) {
-        checkBox = document.getElementById(cost);
+    for (const cost of costs) {
+        let checkBox = document.getElementById(cost) as HTMLInputElement;
         if (!checkBox.checked && (contract.costs[cost] > 0)) {
             included = false;
         }
     }
-    for (reward of rewards) {
-        checkBox = document.getElementById(reward);
+    for (const reward of rewards) {
+        let checkBox = document.getElementById(reward) as HTMLInputElement;
         if (!checkBox.checked && (contract.rewards[reward] > 0)) {
             included = false;
         }
@@ -69,7 +69,7 @@ function generateContractHtml(contract) {
 }
 
 function toggleDiscard(id) {
-    for (contract of contracts) {
+    for (const contract of contracts) {
         if (contract.id === id) {
             contract.discarded = !contract.discarded;
         }
